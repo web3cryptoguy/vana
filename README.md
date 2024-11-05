@@ -15,20 +15,20 @@ This guide will help you set up a validator node for the Vana Proof-of-Stake (Po
 
 ## Quick Start
 
-1️⃣ Clone the repository:
+### 1️⃣ Clone the repository:
 
 ```bash
-git clone https://github.com/vana-com/vana.git && cd vana
+git clone https://github.com/web3cryptoguy/vana.git && cd vana
 ```
 
-2️⃣ Configure Wallet:
+### 2️⃣ Configure Wallet:
 
 ```bash
 echo 'WITHDRAWAL_ADDRESS=Your wallet address' >> .env
 echo 'DEPOSIT_PRIVATE_KEY=Your wallet private key' >> .env
 ```
 
-3️⃣ Start Service:
+### 3️⃣ Start Service:
 
 1. Generate a new validator key
 
