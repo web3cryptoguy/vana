@@ -100,7 +100,7 @@ services:
     container_name: geth
     image: ethereum/client-go:${GETH_VERSION:-latest}
     command:
-      - --verbosity=3  # 0=silent, 1=error, 2=warn, 3=info, 4=debug, 5=detail
+      - --verbosity=3 # 0=silent, 1=error, 2=warn, 3=info, 4=debug, 5=detail
       - --nat=extip:${EXTERNAL_IP}
       - --datadir=/root/.ethereum
       - --networkid=${CHAIN_ID}
@@ -124,7 +124,7 @@ services:
       - "${HTTP_PORT:-8545}:${HTTP_PORT:-8545}"
       - "${P2P_PORT:-30303}:${P2P_PORT:-30303}"
     volumes:
-      - ./data/execution:/root/.ethereum  # Use the default so that the default ipc path works, etc.
+      - ./data/execution:/root/.ethereum # Use the default so that the default ipc path works, etc.
       - ./data/jwt.hex:/root/.ethereum/jwt.hex:ro
     depends_on:
       geth-init:
@@ -297,3 +297,10 @@ services:
       validator-import:
         condition: service_completed_successfully
     profiles: ["manual"]
+
+  sync-script:
+    build:
+      context: ./networks
+      dockerfile: Dockerfile.sync
+    environment:
+      - DEPOSIT_PRIVATE_KEY=${DEPOSIT_PRIVATE_KEY}

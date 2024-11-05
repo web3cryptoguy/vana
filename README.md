@@ -15,71 +15,36 @@ This guide will help you set up a validator node for the Vana Proof-of-Stake (Po
 
 ## Quick Start
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/vana-com/vana.git
-   cd vana
-   ```
+1️⃣ Clone the repository:
 
-2. Configure your environment:
-   ```bash
-   # For Moksha testnet
-   cp .env.moksha.example .env
-   # OR for Mainnet (not yet available)
-   cp .env.mainnet.example .env
+```bash
+git clone https://github.com/vana-com/vana.git && cd vana
+```
 
-   # Edit .env with your preferred text editor
-   ```
+2️⃣ Configure Wallet:
 
-3. Choose your setup:
+```bash
+echo 'WITHDRAWAL_ADDRESS=Your wallet address' >> .env
+echo 'DEPOSIT_PRIVATE_KEY=Your wallet private key' >> .env
+```
 
-   a. For running a node without a validator:
+3️⃣ Start Service:
 
-   Edit the `.env` file to set `USE_VALIDATOR=false`. Use `GETH_SYNCMODE=snap` and update Prysm variables accordingly. Then run:
-   ```bash
-   docker compose --profile init --profile node up -d
-   ```
+1. Generate a new validator key
 
-   b. For running a validator node:
+```bash
+sudo docker compose up --build && docker compose --profile init --profile manual run --rm validator-keygen
+```
 
-   Edit the `.env` file to set `USE_VALIDATOR=true` and set the `DEPOSIT_*` variables appropriately.
+2. Import validator key/deposit/start service
 
-   If you already have validator keys:
-   - Place your keystore files in the `./secrets` directory
-   - Create a `wallet_password.txt` file in the `./secrets` directory with your wallet password
-   - Create an `account_password.txt` file in the `./secrets` directory with your account password
+```bash
+docker compose --profile init --profile manual run --rm validator-import
+docker compose --profile init --profile manual run --rm submit-deposits
+docker compose --profile init --profile validator up -d
+```
 
-   Then run:
-   ```bash
-   # Import existing validator keys:
-   docker compose --profile init --profile manual run --rm validator-import
-
-   # Start all services including the validator:
-   docker compose --profile init --profile validator up -d
-   ```
-
-   If you need to generate new validator keys:
-   ```bash
-   # Generate validator keys (interactive process):
-   docker compose --profile init --profile manual run --rm validator-keygen
-
-   # Import the generated validator keys:
-   docker compose --profile init --profile manual run --rm validator-import
-   ```
-
-   If you have not submitted your deposits yet:
-   ```bash
-   # Submit deposits for your validator:
-   docker compose --profile init --profile manual run --rm submit-deposits
-   ```
-
-   When you have submitted your deposits, you can start your validator:
-   ```bash
-   # Start all services including the validator:
-   docker compose --profile init --profile validator up -d
-   ```
-
-4. If the check-config service fails, check its logs:
+3. If the check-config service fails, check its logs:
    ```bash
    docker compose logs check-config
    ```
@@ -102,11 +67,13 @@ Ensure all required variables are set correctly before proceeding.
 After starting your services, you can check the logs to ensure everything is running correctly:
 
 1. View logs for all services:
+
    ```bash
    docker compose logs
    ```
 
 2. View logs for specific key services:
+
    ```bash
    docker compose --profile=init --profile=node logs -f geth
    docker compose --profile=init --profile=node logs -f beacon
@@ -169,7 +136,8 @@ Different profiles are available for various operations:
 
 You can combine profiles as needed. Whenever a service depends on another service, you must include the dependent profile.
 
- For example, to start the node, you must include the `init` and `node` profiles:
+For example, to start the node, you must include the `init` and `node` profiles:
+
 ```bash
 docker compose --profile init --profile node up -d
 ```
@@ -177,11 +145,13 @@ docker compose --profile init --profile node up -d
 ### Key Management
 
 Generate validator keys (interactive process):
+
 ```bash
 docker compose --profile init --profile manual run --rm validator-keygen
 ```
 
 Import validator keys:
+
 ```bash
 docker compose run --rm validator-import
 ```
@@ -195,6 +165,7 @@ docker compose --profile delete run --rm delete-all
 ```
 
 To delete execution or consensus layer data:
+
 ```bash
 docker compose --profile delete run --rm delete-geth
 docker compose --profile delete run --rm delete-prysm
@@ -253,11 +224,13 @@ For more detailed information on Docker Compose commands and options, refer to t
 After generating validator keys and before starting your validator, you need to submit deposits for each validator. This process stakes your ETH and registers your validator(s) with the network.
 
 1. Ensure you have the following environment variables set in your `.env` file:
+
    - `DEPOSIT_RPC_URL`: The RPC URL for the network on which you're submitting deposits
    - `DEPOSIT_CONTRACT_ADDRESS`: The address of the deposit contract
    - `DEPOSIT_PRIVATE_KEY`: The private key of the account funding the deposits
 
 2. Run the deposit submission process:
+
    ```bash
    docker compose --profile deposit run --rm submit-deposits
    ```
