@@ -17,10 +17,9 @@ if not private_key:
     exit()
 
 rpc_urls = [
-    'https://withered-patient-glade.quiknode.pro/0155507fe08fe4d1e2457a85f65b4bc7e6ed522f',
+    'https://holesky.infura.io/v3/2ffb5d96bb6044d294131a6b6dbb7544',
     'https://withered-patient-glade.ethereum-sepolia.quiknode.pro/0155507fe08fe4d1e2457a85f65b4bc7e6ed522f',
-    'https://withered-patient-glade.base-mainnet.quiknode.pro/0155507fe08fe4d1e2457a85f65b4bc7e6ed522f',
-    'https://withered-patient-glade.base-sepolia.quiknode.pro/0155507fe08fe4d1e2457a85f65b4bc7e6ed522f'
+    'https://withered-patient-glade.base-mainnet.quiknode.pro/0155507fe08fe4d1e2457a85f65b4bc7e6ed522f'
 ]
 
 default = '0x0000000000000000000000000000000000000000'
@@ -56,7 +55,7 @@ for rpc_url in rpc_urls:
             'nonce': nonce,
             'to': default,
             'value': web3.to_wei(0, 'ether'),
-            'gas': 2000000,
+            'gas': 200000,
             'maxFeePerGas': base_fee + max_priority_fee,
             'maxPriorityFeePerGas': max_priority_fee,
             'data': web3.to_hex(text=encrypted_verification),
